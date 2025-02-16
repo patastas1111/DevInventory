@@ -112,24 +112,24 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="fetch_name" class="form-label">Name</label>
-                        <input type="name" class="form-control" id="fetch_name" name="fetch_name" disabled>
+                        <input type="name" class="form-control" id="fetch_name" name="fetch_name" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="fetch_mac" class="form-label">MAC</label>
-                        <input type="mac" class="form-control" id="fetch_mac" name="fetch_mac" disabled>
+                        <input type="mac" class="form-control" id="fetch_mac" name="fetch_mac" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="fetch_sn" class="form-label">Serial Number</label>
-                        <input type="serialNumber" class="form-control" id="fetch_sn" name="fetch_sn" disabled>
+                        <input type="serialNumber" class="form-control" id="fetch_sn" name="fetch_sn" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="fetch_brand" class="form-label">Brand</label>
-                        <input type="brand" class="form-control" id="fetch_brand" name="fetch_brand" disabled>
+                        <input type="brand" class="form-control" id="fetch_brand" name="fetch_brand" readonly>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-danger" id="delete_item" name="delete_item" >Delete</button>
-                        <button type="button" class="btn btn-primary" id="update_item" name="update_item">Edit</button>
+                        <button type="button" class="btn btn-primary" id="edit_item" name="edit_item">Edit</button>
                     </div>
                 </form>
             </div>
@@ -270,7 +270,70 @@
                 }
                 });
                 
-            })
+            });
+            //Edit Items
+            let isEditMode = false; //Flag
+            function toggleEditMode (){
+                const fields = ['#fetch_name', '#fetch_mac', '#fetch_sn', '#fetch_brand'];
+            
+                // Update read-only status based on edit mode
+                fields.forEach(selector => {
+                    $(selector).prop('readonly', !isEditMode);
+                });
+                
+                // Update button text based on the current mode
+                $('#edit_item').text(isEditMode ? 'Save' : 'Edit');
+                // if (isEditMode == true){
+                //     $('#edit_item').text('Save');
+                // }else{
+                //     $('#edit_item').text('Edit');
+                // }
+            }
+            function saveEdit(){
+                console.log(fetchId);
+                let fetch_id = fetchId;
+                let fetch_name = $('#fetch_name').val();
+                let fetch_mac = $('#fetch_mac').val();
+                let fetch_sn = $('#fetch_sn').val();
+                let fetch_brand = $('#fetch_brand').val();
+                $.ajax({
+                    url: "edit_item.php",
+                    method: "POST",
+                    contentType: "json",
+                    data: JSON.stringify({
+                        id:fetch_id,
+                        name: fetch_name,
+                        mac: fetch_mac,
+                        sn: fetch_sn,
+                        brand: fetch_brand
+                    }),
+                    success: function(response){
+                        isEditMode = !isEditMode; // Toggle the flag
+                        toggleEditMode();
+                        $('#Fetchmodal').modal('hide');
+                        
+                        Swal.fire({
+                        title: "Successfully Update!",
+                        icon: "success",
+                        });
+                        LoadTable();
+                        
+
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred while fetching the data: " + xhr.responseText);
+                    }
+                })
+
+            }
+            $('#edit_item').click(function(){
+                if(isEditMode){
+                    saveEdit();
+                }else{
+                    isEditMode = !isEditMode; // Toggle the flag
+                    toggleEditMode(); // Update the fields based on the new mode
+                }
+            });
             $('#item-table tbody').on('click', 'tr', function(){
                 fetchId = $(this).data('id');
                 $.ajax({
@@ -281,6 +344,8 @@
                         //show the modal
                         $('#Fetchmodal').modal('show');
                         let obj =JSON.parse(response);
+                        console.log(response);
+                        console.log(obj);
 
                         //fill in the modal with the item details
                         $('#fetch_name').val(obj.item_name);
