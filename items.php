@@ -1,3 +1,11 @@
+<?php 
+session_start();
+if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
+  header("Location: index.php");
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" >
 
@@ -31,7 +39,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="items.php">Items</a>
                     </li>
+                    <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarUser" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <?php echo $_SESSION['user_email']?>
+                    </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarUser">
+                            <li><a class="dropdown-item" href="">Account</a></li>
+                            <li><a class="dropdown-item" href="">Settings</a></li>
+                            <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+
+                        </ul>
+                </li>
                 </ul>
+                
             </div>
         </div>
     </nav>
