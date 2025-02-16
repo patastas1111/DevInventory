@@ -1,3 +1,11 @@
+<?php 
+if (isset( $_SESSION["email"])){
+  $email = $_SESSION["email"];
+}
+
+?>
+
+
 <html lang="en">
 <head>
     <title>Testing</title>
@@ -45,7 +53,7 @@
                         $result = $conn->query($sql);
                         $totalItems = $result->num_rows
                         ?>
-                        <h3 class="fs-2"><?= $totalItems ?></h3>
+                        <h3 class="fs-2"><?php echo $totalItems ?></h3>
                         <p class="fs-5 mb-0">Total Items</p>
                     </div>
                     <div class="icon-circle bg-light text-primary">
@@ -65,7 +73,7 @@
                         $result_users = $conn->query($sql);
                         $totalUsers = $result_users->num_rows
                         ?>
-                        <h3 class="fs-2"><?= $totalUsers ?></h3>
+                        <h3 class="fs-2"><?php echo $totalUsers ?></h3>
                         <p class="fs-5 mb-0">Total Users</p>
                     </div>
                     <div class="icon-circle bg-light text-info">
