@@ -6,7 +6,13 @@
     <meta name="author" content="Charlie Chavez">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.datatables.net/2.2.1/css/dataTables.dataTables.min.css" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/2.2.1/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    
     <title>Login Page</title>
     <style>
         /* Body styling */
@@ -116,10 +122,73 @@
         </form>
 
         <!-- Register Button -->
-        <button onclick="location.href = 'registration.php'" type="button" class="btn btn-info mt-3">Register</button>
+        <button  type="button" class="btn btn-info mt-3" data-bs-toggle="modal" data-bs-target="#RegisterModal">Register</button>
 
 
     </div>
+    <!-- Register Modal -->
+    <div class="modal fade" id="RegisterModal" tabindex="-1" aria-labelledby="RegisterModallabel" aria-hidden="true"  data-bs-backdrop="static" >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="RegisterModallabel">Register</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="reg_email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="reg_email" name="reg_email">
+                        </div>
+                        <div class="mb-3">
+                            <label for="reg_password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="reg_password" name="reg_password">
+                        </div>
+                        <div class="mb-3">
+                            <label for="reg_address" class="form-label">Address</label>
+                            <input type="address" class="form-control" id="reg_address" name="reg_address">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="register" name="register">Register</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#register').click(function(){
+                $email = $('#reg_email').val();
+                $password = $('#reg_password').val();
+                $address = $('#reg_address').val();
+
+                $.ajax({
+                    url:'add_registration.php',
+                    method:'POST',
+                    data: {
+                        email: $email,
+                        password: $password,
+                        address: $address,
+                    },
+                    success: function(response) {
+                        $('#RegisterModal').modal('hide');
+
+                        Swal.fire({
+                        title: "Successfully Register!",
+                        icon: "success",
+                        });
+                    },error: function(xhr, status, error) {
+                        Swal.fire({
+                        title: "Error!",
+                        text: xhr.responseText,
+                        icon: "error",
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

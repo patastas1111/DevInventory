@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] =="POST"){
     }else{
         $sql_insert = "INSERT INTO users (user_email, user_password, user_address) VALUES('$email', '$password', '$address')";
         if ($conn->query($sql_insert) === TRUE){
-            echo "Registeredd Successfully";
+            header(header: "Location: index.php");
+            exit();
         }else{
             echo "Error" . $sql_insert ."<br>". $conn->error;
         }
