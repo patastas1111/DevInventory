@@ -49,7 +49,7 @@ if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true)
                             <li><a class="dropdown-item" href="logout.php">Logout</a></li>
 
                         </ul>
-                </li>
+                    </li>
                 </ul>
                 
             </div>
