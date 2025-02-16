@@ -1,0 +1,35 @@
+/* Card Hover Effect */
+.hover-scale {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+/* Circular Icon Backgrounds */
+.icon-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Background Gradients */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.bg-gradient-info {
+    background: linear-gradient(135deg, #2193b0 0%, #6dd5ed 100%);
+}
+
+.bg-gradient-danger {
+    background: linear-gradient(135deg, #e53935 0%, #e35d5b 100%);
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f7971e 0%, #ffd200 100%);
+}
