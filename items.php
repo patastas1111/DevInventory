@@ -140,42 +140,52 @@
     <script>
        $(document).ready(function() {
             // Initialize the DataTable
-            var table = $('#item-table').DataTable({
-                searching: true,
-                responsive: true,
-                autoWidth: false,
-                lengthChange: false,
-                paging: true,
-                info: true,
-                order: [[0, 'asc']],
-                lengthMenu: [20, 50, 100, 200],
-                pageLength: 20
-            });
-            
             let fetchId = "";
-            $.ajax({
-                url: "fetch_table.php",  // URL to fetch data via JSON
-                method: "GET",
-                dataType: "json",  // Ensure the response is parsed as JSON
-                success: function(response) {
-                    let tableBody = $('#compute_table');
-                    tableBody.empty();
-                    response.forEach(function(item) {
-                        // Add each row to the table
-                            let row = "<tr data-bs-toggle='modal' data-bs-target='#Fetchmodal' data-id='" + item.item_id +"'>" +
-                                "<td>" + item.item_id + "</td>" +
-                                "<td>" + item.item_name + "</td>" +
-                                "<td>" + item.item_mac + "</td>" +
-                                "<td>" + item.item_sn + "</td>" +
-                                "<td>" + item.item_brand + "</td>" +
-                                "</tr>";
-                           tableBody.append(row);     
-                    });
-                },
-                error: function(xhr, status, error) {
-                    alert("An error occurred while fetching the data: " + xhr.responseText);
-                }
-            });
+
+            function LoadTable(){
+                $.ajax({
+                    url: "fetch_table.php",  // URL to fetch data via JSON
+                    method: "GET",
+                    dataType: "json",  // Ensure the response is parsed as JSON
+                    success: function(response) {
+                        let tableBody = $('#compute_table');
+                        tableBody.empty();
+                        response.forEach(function(item) {
+                            // Add each row to the table
+                                let row = "<tr data-bs-toggle='modal' data-bs-target='#Fetchmodal' data-id='" + item.item_id +"'>" +
+                                    "<td>" + item.item_id + "</td>" +
+                                    "<td>" + item.item_name + "</td>" +
+                                    "<td>" + item.item_mac + "</td>" +
+                                    "<td>" + item.item_sn + "</td>" +
+                                    "<td>" + item.item_brand + "</td>" +
+                                    "</tr>";
+                            tableBody.append(row);     
+                        });
+                        
+                        $('#item-table').show();
+                        // Clear The config
+                        if ($.fn.DataTable.isDataTable('#item-table')) {
+                            $('#item-table').DataTable().destroy();
+                        }
+
+                        var table = $('#item-table').DataTable({
+                            searching: true,
+                            responsive: true,
+                            autoWidth: false,
+                            lengthChange: false,
+                            paging: true,
+                            info: true,
+                            order: [[0, 'asc']],
+                            lengthMenu: [20, 50, 100, 200],
+                            pageLength: 20
+                            });
+                    },
+                    error: function(xhr, status, error) {
+                        alert("An error occurred while fetching the data: " + xhr.responseText);
+                    }
+                });
+            }
+            LoadTable();
             $('#submit_item').click(function() {
                 let item_name = $('#item_name').val();
                 let item_mac = $('#item_mac').val();
@@ -194,6 +204,9 @@
                     success: function(response) {
                         alert(response);
                         $('#AddModal').modal('hide'); //hide the modal after submission
+                        setTimeout(() => { 
+                            LoadTable();
+                        }, 2000);
                     },
                     error: function(xhr, status, error) {
                         alert("An error occurred while fetching the data: " + xhr.responseText);
@@ -231,6 +244,10 @@
                             text: "Your data has been deleted.",
                             icon: "success"
                             });
+                            $('#Fetchmodal').modal('hide');
+                            setTimeout(() => { 
+                                    LoadTable();
+                                }, 2000);
                         },
                         error: function(xhr, status, error) {
                             swalWithBootstrapButtons.fire({
