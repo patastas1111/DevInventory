@@ -17,7 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Verify the hash code against the unencrypted password entered 
             $verify = password_verify($unencrypted_password, $hash); 
             if ($verify) {
-                $_SESSION["login_email"] = $email;
+                $_SESSION['user_logged_in'] = true;
+                $_SESSION['user_email'] = $email;
                 header(header: "Location: dashboard.php");
                 exit();
             } else {

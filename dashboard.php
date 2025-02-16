@@ -1,7 +1,10 @@
 <?php 
-if (isset( $_SESSION["email"])){
-  $email = $_SESSION["email"];
+session_start();
+if (!isset($_SESSION['user_logged_in']) || $_SESSION['user_logged_in'] !== true) {
+  header("Location: index.php");
+  exit();
 }
+
 
 ?>
 
