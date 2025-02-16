@@ -202,17 +202,57 @@
             });
 
             $('#delete_item').click(function (){
-                $.ajax({
-                    url: "delete_item.php",
-                    method: "POST",
-                    data: {id: fetchId},
-                    success: function(response){
-                        alert("Delete successfully!");
-                    },
-                    error: function(xhr, status, error) {
-                        alert("An error occurred while deleting the data: " + xhr.responseText);
-                    }
-                })
+                const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: "btn btn-success",
+                    cancelButton: "btn btn-danger"
+                },
+                buttonsStyling: false
+                });
+                swalWithBootstrapButtons.fire({
+                title: "Are you sure?",
+                text: "You won't be able to revert this!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, delete it!",
+                cancelButtonText: "No, cancel!",
+                reverseButtons: true
+                }).then((result) => {
+                // If they press yes, delete it 
+                if (result.isConfirmed) {
+                    $.ajax({
+                        
+                        url: "delete_item.php",
+                        method: "POST",
+                        data: {id: fetchId},
+                        success: function(response){
+                            swalWithBootstrapButtons.fire({
+                            title: "Deleted!",
+                            text: "Your data has been deleted.",
+                            icon: "success"
+                            });
+                        },
+                        error: function(xhr, status, error) {
+                            swalWithBootstrapButtons.fire({
+                            title: "Deleted!",
+                            text: "Your data has been deleted.",
+                            icon: "success"
+                            });
+                        }
+                    })
+                   
+                } else if (
+                    /* Read more about handling dismissals below */
+                    result.dismiss === Swal.DismissReason.cancel
+                ) {
+                    swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "An error occurred while fetching the data: " + xhr.responseText,
+                    icon: "error"
+                    });
+                }
+                });
+                
             })
             $('#item-table tbody').on('click', 'tr', function(){
                 fetchId = $(this).data('id');
